@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ZaBAOW/blog-api-challenge/issues"
   },
-  "homepage": "https://github.com/ZaBAOW/blog-api-challenge#readme"
+  "homepage": "https://github.com/ZaBAOW/blog-api-challenge#readme",
+  "dependencies": {
+    "uuid": "^3.2.1"
+  }
 }
