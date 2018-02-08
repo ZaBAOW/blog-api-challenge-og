@@ -4,7 +4,7 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
-const {blogPosts} require('./models');
+const {BlogPosts} require('./models');
 
 blogPosts.create(
 	'blog post 1', 'my content 1', 'Zable1', Date.now()
@@ -21,4 +21,6 @@ router.get('/', (req, res) => {
 });
 
 
+
+module.exports = router;
 
