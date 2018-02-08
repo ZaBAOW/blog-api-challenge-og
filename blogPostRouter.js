@@ -32,7 +32,13 @@ router.post('/', jsonParser, (req, res) => {
 	}	
 	const item = BlogPosts.create(req.body.title, req.body.content, req.body.author, req.body.publishDate);
 	res.status(201).json(item);
-})
+});
+
+router.delete('/:id', (req, res) => {
+	BlogPosts.delete(req.params.id);
+	console.log(`Deleted blog post item\`${req.params.ID}\``);
+	res.status(204).end();
+});
 
 
 module.exports = router;
