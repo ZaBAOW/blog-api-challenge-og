@@ -40,6 +40,33 @@ router.delete('/:id', (req, res) => {
 	res.status(204).end();
 });
 
+router.put('/:id', jsonParser, (req, res) => {
+	const requiredFields = ['title', 'content', 'author', 'publishDate'];
+	for (let i=0; i< requiredFields.length; i++){
+		const field = requiredFields[i];
+		if(!(field in req.body)) {
+			const message = `Missing \`${field}\` in request body`
+			console.error(message);
+			return res.status(400).send(message);
+		}
+	}	
+	if(req.params.id !== req.body.id){
+		const message = (
+			`Request pat id (${req.params.id}) and request body id`
+			`(${req.body.id}) must match`);
+		console.error(message);
+		return res.status(400).send(message);
+	}
+	console.log(`Updating shopping list item \`${req.params.id}\``);
+	const updatedItem = Recipes.update({
+		id: req.params.id,
+		title: req.params.title,
+		content: req.params.content,
+		author: req.params.author,
+		publishDate: req.params.publishDate
+	});
+	res.status(204).end();
+})
 
 module.exports = router;
 
