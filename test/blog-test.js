@@ -32,7 +32,7 @@ describe('Blogpost List', function(){
 	});
 
 	it('Should add a Blogpost on POST', function(){
-		const newBlogPost = ['test blog', 'test content', 'test Zabel', 'Date.now()']
+		const newBlogPost = ({'title': 'new title', 'content': 'new content', 'author': 'new Zabel', 'publishDate': Date.now()})
 		return chai.request(app).post('/blog-posts').send(newBlogPost).then(function(res){
 			expect(res).to.have.status(201);
 			expect(res).to.be.json;
