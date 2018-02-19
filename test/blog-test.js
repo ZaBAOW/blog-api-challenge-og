@@ -5,6 +5,8 @@ const {app, runServer, closeServer} = require('../server');
 
 const expect = chai.expect;
 
+const {BlogPosts} = require('../models');
+
 chai.use(chaiHTTP);
 
 describe('Blogpost List', function(){
@@ -64,11 +66,20 @@ describe('Blogpost List', function(){
 		});
 	});
 
-	it('Should delete recipes on DELETE', function(){
-		return chai.request(app).get('/blog-posts').then(function(res){
-			return chai.request(app).delete(`blog-posts/${res.body[0].id}`);
-		}).then(function(res){
+	// it('Should delete Blogposts on DELETE', function(){
+	// 	return chai.request(app).get('/blog-posts').then(function(res){
+	// 		return chai.request(app).delete(`/blog-posts/${res.body[0].id}`);
+	// 	}).then(function(res){
+	// 		expect(res).to.have.status(204);
+	// 	});
+	// });
+	it('Should delete Blogposts on DELETE', function(){
+		const oldBlog = BlogPosts.create(
+			'old title', 'old content', 'old Zabel', Date.now()
+		);
+		return chai.request(app).delete(`/blog-posts/${oldBlog.id}`).then(function(res){
 			expect(res).to.have.status(204);
 		})
-	})
+
+	});
 });
