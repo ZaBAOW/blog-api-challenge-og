@@ -5,6 +5,8 @@ const {app, runServer, closeServer} = require('../server');
 
 const expect = chai.expect;
 
+chai.use(chaiHTTP);
+
 describe('Blogpost List', function(){
 	before(function(){
 		return runServer();
@@ -19,7 +21,7 @@ describe('Blogpost List', function(){
 			expect(res).to.have.status(200);
 			expect(res).to.be.json;
 			expect(res.body).to.be.a('array');
-			expect(res.body).to.be.at.least(1);
+			expect(res.body.length).to.be.at.least(1);
 
 			const expectKeys = ['id', 'title', 'content', 'author', 'publishDate'];
 			res.body.forEach(function(item){
@@ -49,7 +51,7 @@ describe('Blogpost List', function(){
 			author: 'update author',
 			publishDate: Date.now()
 		};
-		return chai.request(App).get('/blog-posts').then(function(res){
+		return chai.request(app).get('/blog-posts').then(function(res){
 			update.id = res.body[0].id;
 			return chai.request(app).put(`/blog-posts/${updateData}`).send(updateData)
 		}).then(function(res){
@@ -57,7 +59,7 @@ describe('Blogpost List', function(){
 			expect(res).to.be.json;
 			expect(res).to.be.a('object');
 			expect(res).to.deep.equal(updateData);
-		}).catch(function(res){
+		}).catch(function(err){
 			console.log(err);
 		});
 	});

@@ -17,10 +17,6 @@ app.get('/', (req, res) => {
 app.use('/blog-posts', blogPostRouter);
 // app.use('/comments', commentRouter);
 
-app.listen(process.env.PORT || 8080, () => {
-	console.log(`The app is listening on port ${process.env.PORT || 8080}`);
-});
-
 function runServer(){
 	const port  = process.env.PORT || 8080;
 	return new Promise((resolve, reject) => {
