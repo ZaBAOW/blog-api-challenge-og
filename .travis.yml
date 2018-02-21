@@ -1,3 +1,3 @@
 language: node_js
 node_js: node
-install: travis_wait mvn install
+script: travis_wait npm test
