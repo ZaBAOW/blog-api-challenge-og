@@ -1,6 +1,3 @@
 language: node_js
 node_js: node
 sudo: false
-script: travis_wait npm test
-after_script: 
-  - killall -9 java
