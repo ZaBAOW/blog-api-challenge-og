@@ -11,10 +11,12 @@ chai.use(chaiHTTP);
 
 describe('Blogpost List', function(){
 	before(function(){
+		console.log('befor function running');
 		return runServer();
 	});
 
 	after(function(){
+		console.log('after function running');
 		return closeServer();
 	});
 
@@ -79,7 +81,7 @@ describe('Blogpost List', function(){
 		);
 		return chai.request(app).delete(`/blog-posts/${oldBlog.id}`).then(function(res){
 			expect(res).to.have.status(204);
-		})
+		});
 
 	});
 });
