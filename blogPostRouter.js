@@ -6,6 +6,8 @@ const jsonParser = bodyParser.json();
 
 const {BlogPosts} = require('./models');
 
+//comment added to check gitbash push
+
 BlogPosts.create(
 	'blog post 1', 'my content 1', 'Zable1', Date.now()
 );
