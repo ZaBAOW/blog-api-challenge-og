@@ -1,5 +1,11 @@
 language: node_js
-node_js: 
-  - "8"
+node_js:
+- '8'
 sudo: false
-
+deploy:
+  provider: heroku
+  api_key:
+    secure: gEzSZWUXRn2Oge6Lr7i8gor3z19WH8TKlm3y0xZ/eboPb1h+JMYrQeB2lYFt5AMR8mnGIqsifoMyy62Wv6OmpWGCT7JwusqTRL1aI5scLwtzF/m0Xt3lJ4aRMLMZsraaCiOONE5r9W1M1DzwRRGfhEaGVZl090CFkmom4cCU6dHBEdS9t49QyD79t2im3ZLyW2rw2zkqVyjTz/mi/DL4VUToHUr3n5Yll1PXjT4w5jhEbd0kONukyKKHbnleG0MJvjifzl0zkPZe37vzaEWNM7uzG71CQeRxl/nIMIs9Z3O6bfIQK0U3mXftaixaVEIp28j9nLILNyIFVH/t4PtZ/y3SnlrOQSJzs+v/L5SYkHNRHyr1LtTyqcRfEp789U+5fRkG8sxSJzoxHmMm3HQQ7wlWq+ToAmF5GuKgkuv8B3/pZ2Up5t132vj7NoZR3qVHeV2f8+2M67HuEbKUjtxQ8wIwuR+Nw5TPAgCQEriZXz/PbshiCvSyrJbr7sNoYY8t+u7fk4y8Ah+H63Jya++rEdUToqaLGJR8lfalrH9b1doisHb4/L/sFby2//vHRIrqO96mXimZgLWif/+lAVfoqRbjwpUHPwRB9sf6xS6Pr3eU4wJnHTH2i7VdIz1HCf+s/6lAkHty8NImNg3ALAqx5Gm5o+zREbcJTzXaM4pBm2k=
+  app: serene-atoll-39579
+  on:
+    repo: ZaBAOW/blog-api-challenge-og
