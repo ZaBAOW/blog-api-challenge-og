@@ -22,7 +22,7 @@ const {BlogPosts} = require('./models');
 router.get('/', (req, res) => {
 	BlogPosts.find().then(BlogPosts => {
 		res.json({
-			BlogPosts: BlogPosts.map((BlogPosts) => BlogPosts.serialize());
+			BlogPosts: BlogPosts.map((BlogPosts) => BlogPosts.serialize())
 		});
 	});
 });
