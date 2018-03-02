@@ -58,9 +58,7 @@ router.post('/', jsonParser, (req, res) => {
 
 
 router.delete('/:id', (req, res) => {
-	BlogPosts.delete(req.params.id);
-	console.log(`Deleted blog post item\`${req.params.ID}\``);
-	res.status(204).end();
+	BlogPosts.findByIdAndRemove(req.params.id).then(BlogPosts => res.status(204).end()).catch(err => res.status(500).json({ message: 'Internal server error'}));
 });
 
 router.put('/:id', jsonParser, (req, res) => {
@@ -72,9 +70,15 @@ router.put('/:id', jsonParser, (req, res) => {
 
 	const toUpdate = {}
 	const updateFields = ['title', 'content', 'author', 'publishDate'];
-	
 
-})
+	updateFields.forEach (field => {
+		if (field in req.body) {
+			toUpdate[field] = req.body[field];
+		}
+	});
+
+	BlogPosts.findByIdAndUpdate(req.params.id, { $set: toUpdate }).then(BlogPosts => res.status(204).end()).catch(err => res.status(500).json( {message: 'Internal server error'}));
+});
 
 module.exports = router;
 
