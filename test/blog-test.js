@@ -5,7 +5,7 @@ const {app, runServer, closeServer} = require('../server');
 
 const expect = chai.expect;
 
-const {BlogPosts} = require('../models');
+const {BlogPostss} = require('../models');
 
 chai.use(chaiHTTP);
 
@@ -36,15 +36,15 @@ describe('Blogpost List', function(){
 	});
 
 	it('Should add a Blogpost on POST', function(){
-		const newBlogPost = ({'title': 'new title', 'content': 'new content', 'author': 'new Zabel', 'publishDate': Date.now()})
-		return chai.request(app).post('/blog-posts').send(newBlogPost).then(function(res){
+		const newBlogPosts = ({'title': 'new title', 'content': 'new content', 'author': 'new Zabel', 'publishDate': Date.now()})
+		return chai.request(app).post('/blog-posts').send(newBlogPosts).then(function(res){
 			expect(res).to.have.status(201);
 			expect(res).to.be.json;
 			expect(res.body).to.be.a('object');
 			expect(res.body).to.include.keys('id', 'title', 'content', 'author', 'publishDate');
 			expect(res.body.id).to.not.equal(null);
 
-			expect(res.body).to.deep.equal(Object.assign(newBlogPost, {id: res.body.id}));
+			expect(res.body).to.deep.equal(Object.assign(newBlogPosts, {id: res.body.id}));
 		});
 	});
 

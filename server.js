@@ -17,15 +17,15 @@ const {BlogPosts} = require('./models');
 app.use(morgan('common'));
 
 app.use(express.static('public'));
-
-app.get('/', (req, res) => {
+app.use(bodyParser.json());
+app.get('/blog-posts', (req, res) => {
 	res.sendFile(__dirname + '/view/index.html');
 });
 
 // app.use('/blog-posts', blogPostRouter);
 // app.use('/comments', commentRouter);
 
-app.get('/', (req, res) => {
+app.get('/blog-posts', (req, res) => {
 	BlogPosts.find().then(BlogPosts => {
 		res.json({
 			BlogPosts: BlogPosts.map((BlogPosts) => BlogPosts.serialize())
@@ -33,14 +33,14 @@ app.get('/', (req, res) => {
 	});
 });
 
-app.get('/:id', (req, res) => {
+app.get('/blog-posts/:id', (req, res) => {
 	BlogPosts.findById(req.params.id).then(BlogPosts => res.json(BlogPosts.serialize())).catch(err => {
 		console.log(err);
 		res.status(500).json({message: 'Internal service error'});
 	});
 });
 
-app.post('/', (req, res) => {
+app.post('/blog-posts', (req, res) => {
 	const requiredFields = ['title', 'content', 'author', 'publishDate'];
 	for(i= 0; i < requiredFields.length; i++){
 		const field = requiredFields[i];
@@ -55,7 +55,7 @@ app.post('/', (req, res) => {
 		title: res.body.title,
 		content: res.body.content,
 		author: res.body.author,
-		publishDate: res.body.Date.now()
+		publishDate: res.body.Date
 	}).then(BlogPosts => res.status(201).json(BlogPosts.serialize())).catch(err => {
 		console.log(err)
 		res.status(500).json({message: 'Internal server error'});
@@ -63,11 +63,11 @@ app.post('/', (req, res) => {
 });
 
 
-app.delete('/:id', (req, res) => {
+app.delete('/blog-posts/:id', (req, res) => {
 	BlogPosts.findByIdAndRemove(req.params.id).then(BlogPosts => res.status(204).end()).catch(err => res.status(500).json({ message: 'Internal server error'}));
 });
 
-app.put('/:id', (req, res) => {
+app.put('/blog-posts/:id', (req, res) => {
 	if(!(req.params.id && req.body.id && req.params.id === req.body.id)){
 		const message = (`Request path id (${req.params.id}) and the request body id (${req.body.id}) must match`);
 		console.error(message);
@@ -85,6 +85,8 @@ app.put('/:id', (req, res) => {
 
 	BlogPosts.findByIdAndUpdate(req.params.id, { $set: toUpdate }).then(BlogPosts => res.status(204).end()).catch(err => res.status(500).json( {message: 'Internal server error'}));
 });
+
+let server;
 
 function runServer(databaseUrl = DATABASE_URL, port = PORT){
 	return new Promise((resolve, reject) => {
@@ -119,7 +121,7 @@ function closeServer() {
 }
 
 if (require.main === module) {
-	runServer().catch(err => console.error(err));
+	runServer(DATABASE_URL).catch(err => console.error(err));
 };
 
 module.exports = {app, runServer, closeServer};
