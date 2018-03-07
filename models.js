@@ -1,5 +1,6 @@
 
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 // This module provides volatile storage, using a `BlogPost`
 // model. We haven't learned about databases yet, so for now
 // we're using in-memory storage. This means each time the app stops, our storage
@@ -19,7 +20,7 @@ const blogPostsSchema = mongoose.Schema({
       title: {type: String, required: true},
       content: {type: String, required: true},
       author: {type: String, required: true},
-      publishDate: Date
+      publishDate: {type: Date, default: Date.now}
 });
 
 blogPostsSchema.methods.serialize = function() {
@@ -28,7 +29,7 @@ blogPostsSchema.methods.serialize = function() {
     title: this.title,
     content: this.content,
     author: this.author,
-    publishDate: this.Date
+    publishDate: this.publishDate
   };
 }
 

@@ -1,11 +1,14 @@
 const chai = require('chai');
 const chaiHTTP = require('chai-http');
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 
 const {app, runServer, closeServer} = require('../server');
 
 const expect = chai.expect;
 
-const {BlogPostss} = require('../models');
+const {BlogPosts} = require('../models');
+const {TEST_DATABASE_URL} = require('../config');
 
 chai.use(chaiHTTP);
 

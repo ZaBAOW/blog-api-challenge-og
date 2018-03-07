@@ -18,6 +18,7 @@ app.use(morgan('common'));
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
+
 app.get('/blog-posts', (req, res) => {
 	res.sendFile(__dirname + '/view/index.html');
 });
@@ -26,15 +27,13 @@ app.get('/blog-posts', (req, res) => {
 // app.use('/comments', commentRouter);
 
 app.get('/blog-posts', (req, res) => {
-	BlogPosts.find().then(BlogPosts => {
-		res.json({
-			BlogPosts: BlogPosts.map((BlogPosts) => BlogPosts.serialize())
-		});
+	BlogPosts.find().then(posts => {
+		res.json(posts.map(post => BlogPosts.serialize()));
 	});
 });
 
 app.get('/blog-posts/:id', (req, res) => {
-	BlogPosts.findById(req.params.id).then(BlogPosts => res.json(BlogPosts.serialize())).catch(err => {
+	BlogPosts.findById(req.params.id).then(posts => res.json(posts.serialize())).catch(err => {
 		console.log(err);
 		res.status(500).json({message: 'Internal service error'});
 	});
@@ -56,15 +55,16 @@ app.post('/blog-posts', (req, res) => {
 		content: res.body.content,
 		author: res.body.author,
 		publishDate: res.body.Date
-	}).then(BlogPosts => res.status(201).json(BlogPosts.serialize())).catch(err => {
+	}).then(posts => res.status(201).json(posts.serialize())).catch(err => {
 		console.log(err)
 		res.status(500).json({message: 'Internal server error'});
 	})
 });
 
 
-app.delete('/blog-posts/:id', (req, res) => {
-	BlogPosts.findByIdAndRemove(req.params.id).then(BlogPosts => res.status(204).end()).catch(err => res.status(500).json({ message: 'Internal server error'}));
+app.delete('/:id', (req, res) => {
+	BlogPosts.findByIdAndRemove(req.params.id).then(() => console.log(`Deleted blog post with id \`${req.params.id}\``);
+		res.status(204).end();
 });
 
 app.put('/blog-posts/:id', (req, res) => {
@@ -83,7 +83,7 @@ app.put('/blog-posts/:id', (req, res) => {
 		}
 	});
 
-	BlogPosts.findByIdAndUpdate(req.params.id, { $set: toUpdate }).then(BlogPosts => res.status(204).end()).catch(err => res.status(500).json( {message: 'Internal server error'}));
+	BlogPosts.findByIdAndUpdate(req.params.id, { $set: toUpdate }).then(() => res.status(204).end()).catch(err => res.status(500).json( {message: 'Internal server error'}));
 });
 
 let server;
