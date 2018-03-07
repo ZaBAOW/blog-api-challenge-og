@@ -63,7 +63,7 @@ app.post('/blog-posts', (req, res) => {
 
 
 app.delete('/:id', (req, res) => {
-	BlogPosts.findByIdAndRemove(req.params.id).then(() => console.log(`Deleted blog post with id \`${req.params.id}\``);
+	BlogPosts.findByIdAndRemove(req.params.id).then(() => console.log(`Deleted blog post with id \`${req.params.id}\``));
 		res.status(204).end();
 });
 
