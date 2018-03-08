@@ -17,6 +17,7 @@ app.use(morgan('common'));
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
+
 app.get('/blog-posts', (req, res) => {
 	return BlogPost.find().then(blogposts => {
 		res.json({
@@ -26,7 +27,9 @@ app.get('/blog-posts', (req, res) => {
 });
 
 app.get('/blog-posts/:id', (req, res) => {
+
 	return BlogPosts.findById(req.params.id).then(post => res.json(post.serialize())).catch(err => {
+
 		console.log(err);
 		res.status(500).json({message: 'Internal service error'});
 	});
@@ -58,6 +61,7 @@ app.post('/blog-posts', (req, res) => {
 });
 
 
+
 app.delete('/blog-posts/:id', (req, res) => {
 	console.log("REQ PARAMS = ", req.params);
 	return BlogPost.findByIdAndRemove(req.params.id)
@@ -86,7 +90,9 @@ app.put('/blog-posts/:id', (req, res) => {
 		}
 	});
 
+
 	BlogPosts.findByIdAndUpdate(req.params.id, { $set: toUpdate }).then(BlogPost => res.status(204).end()).catch(err => res.status(500).json( {message: 'Internal server error'}));
+
 });
 
 let server;
