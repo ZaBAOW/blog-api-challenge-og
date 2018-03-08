@@ -10,28 +10,22 @@ const mongoose = require('mongoose');
 // is implemented, and getting it to use an existing model.
 
 
-function StorageException(message) {
-   this.message = message;
-   this.name = "StorageException";
-}
-
-const blogPostsSchema = mongoose.Schema({
+const BlogPostsSchema = mongoose.Schema({
       title: {type: String, required: true},
       content: {type: String, required: true},
       author: {type: String, required: true},
       publishDate: Date
 });
 
-blogPostsSchema.methods.serialize = function() {
-  return{
-    id: this._id,
+BlogPostsSchema.methods.serialize = function() {
+  return {
     title: this.title,
     content: this.content,
     author: this.author,
-    publishDate: this.Date
+    publishDate: this.publishDate
   };
 }
 
-const BlogPosts = mongoose.model('BlogPost', blogPostsSchema);
+const BlogPost = mongoose.model('BlogPost', BlogPostsSchema);
 
-module.exports = {BlogPosts};
+module.exports = {BlogPost};
