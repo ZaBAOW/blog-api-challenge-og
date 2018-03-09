@@ -9,31 +9,27 @@ mongoose.Promise = global.Promise;
 
 const app =  express();
 
-const {PORT, DATABASE_URL} = require('./config');
-const {BlogPosts} = require('./models');
-// const blogPostRouter = require('./blogPostRouter');
-// const commentRouter = require('./commentRouter');
+const {DATABASE_URL, PORT} = require('./config');
+const {BlogPost} = require('./models');
 
 app.use(morgan('common'));
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
-app.get('/blog-posts', (req, res) => {
-	res.sendFile(__dirname + '/view/index.html');
-});
-
-// app.use('/blog-posts', blogPostRouter);
-// app.use('/comments', commentRouter);
 
 app.get('/blog-posts', (req, res) => {
-	BlogPosts.find().then(posts => {
-		res.json(posts.map(post => BlogPosts.serialize()));
+	return BlogPost.find().then(blogposts => {
+		res.json({
+			BlogPosts: blogposts.map((post) => post.serialize())
+		});
 	});
 });
 
 app.get('/blog-posts/:id', (req, res) => {
-	BlogPosts.findById(req.params.id).then(posts => res.json(posts.serialize())).catch(err => {
+
+	return BlogPosts.findById(req.params.id).then(post => res.json(post.serialize())).catch(err => {
+
 		console.log(err);
 		res.status(500).json({message: 'Internal service error'});
 	});
@@ -41,7 +37,7 @@ app.get('/blog-posts/:id', (req, res) => {
 
 app.post('/blog-posts', (req, res) => {
 	const requiredFields = ['title', 'content', 'author', 'publishDate'];
-	for(i= 0; i < requiredFields.length; i++){
+	for(let i= 0; i < requiredFields.length; i++){
 		const field = requiredFields[i];
 		if (!(field in req.body)){
 			const message = (`Missing\`${field}\`in request body`);
@@ -50,21 +46,32 @@ app.post('/blog-posts', (req, res) => {
 		}
 	}
 
-	BlogPosts.create({
-		title: res.body.title,
-		content: res.body.content,
-		author: res.body.author,
-		publishDate: res.body.Date
-	}).then(posts => res.status(201).json(posts.serialize())).catch(err => {
+	BlogPost.create({
+		title: req.body.title,
+		content: req.body.content,
+		author: req.body.author,
+		publishDate: req.body.publishDate
+	}).then(function(post) {
+		console.log("POST = ", post);
+		res.status(201).json(post.serialize())
+	}).catch(err => {
 		console.log(err)
 		res.status(500).json({message: 'Internal server error'});
 	})
 });
 
 
-app.delete('/:id', (req, res) => {
-	BlogPosts.findByIdAndRemove(req.params.id).then(() => console.log(`Deleted blog post with id \`${req.params.id}\``));
-		res.status(204).end();
+
+app.delete('/blog-posts/:id', (req, res) => {
+	console.log("REQ PARAMS = ", req.params);
+	return BlogPost.findByIdAndRemove(req.params.id)
+		.then(post => res.status(204).end())
+		.catch(function(err) {
+			console.log("ERR = ", err);
+			res.status(500).json(
+				{ message: 'Internal server error: ' + err}
+			)
+		});
 });
 
 app.put('/blog-posts/:id', (req, res) => {
@@ -83,7 +90,9 @@ app.put('/blog-posts/:id', (req, res) => {
 		}
 	});
 
-	BlogPosts.findByIdAndUpdate(req.params.id, { $set: toUpdate }).then(() => res.status(204).end()).catch(err => res.status(500).json( {message: 'Internal server error'}));
+
+	BlogPosts.findByIdAndUpdate(req.params.id, { $set: toUpdate }).then(BlogPost => res.status(204).end()).catch(err => res.status(500).json( {message: 'Internal server error'}));
+
 });
 
 let server;
@@ -103,7 +112,6 @@ function runServer(databaseUrl = DATABASE_URL, port = PORT){
 			});
 		});
 	});
-	
 }	
 
 function closeServer() {

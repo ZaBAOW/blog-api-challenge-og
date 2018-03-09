@@ -49,8 +49,8 @@ router.post('/', jsonParser, (req, res) => {
 		title: res.body.title,
 		content: res.body.content,
 		author: res.body.author,
-		publishDate: res.body.Date.now()
-	}).then(BlogPosts => res.status(201).json(BlogPosts.serialize())).catch(err => {
+		publishDate: Date.now()
+	}).then(posts => res.status(201).json(posts.title)).catch(err => {
 		console.log(err)
 		res.status(500).json({message: 'Internal server error'});
 	})
