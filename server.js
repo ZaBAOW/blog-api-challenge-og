@@ -63,7 +63,7 @@ app.post('/blog-posts', (req, res) => {
 
 
 app.delete('/blog-posts/:id', (req, res) => {
-	console.log("REQ PARAMS = ", req.params);
+	
 	return BlogPost.findByIdAndRemove(req.params.id)
 		.then(post => res.status(204).end())
 		.catch(function(err) {
@@ -75,6 +75,7 @@ app.delete('/blog-posts/:id', (req, res) => {
 });
 
 app.put('/blog-posts/:id', (req, res) => {
+	console.log("PUT REQ PARAMS = ", req.params);
 	if(!(req.params.id && req.body.id && req.params.id === req.body.id)){
 		const message = (`Request path id (${req.params.id}) and the request body id (${req.body.id}) must match`);
 		console.error(message);
@@ -89,9 +90,11 @@ app.put('/blog-posts/:id', (req, res) => {
 			toUpdate[field] = req.body[field];
 		}
 	});
+	console.log("About to Update!");
 
-
-	BlogPosts.findByIdAndUpdate(req.params.id, { $set: toUpdate }).then(BlogPost => res.status(204).end()).catch(err => res.status(500).json( {message: 'Internal server error'}));
+	BlogPost.findByIdAndUpdate(req.params.id, { $set: toUpdate })
+		.then(post => res.status(204).json({}))
+		.catch(err => res.status(500).json( {message: 'Internal server error: ' + err}));
 
 });
 

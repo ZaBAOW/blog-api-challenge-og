@@ -39,7 +39,7 @@ describe('Blogpost List', function(){
 				.then(function(res){
 				expect(res).to.have.status(200);
 				expect(res).to.be.json;
-				console.log("RES BODY = ", res.body);
+				//console.log("RES BODY = ", res.body);
 				expect(res.body).to.be.a('object');
 				//expect(res.body.length).to.be.at.least(1);
 	
@@ -64,7 +64,7 @@ describe('Blogpost List', function(){
 			expect(res).to.have.status(201);
 			expect(res).to.be.json;
 			expect(res.body).to.be.a('object');
-			console.log("RES BODY = ", res.body);
+			//console.log("RES BODY = ", res.body);
 			expect(res.body).to.include.keys('title', 'content', 'author', 'publishDate');
 			expect(res.body.id).to.not.equal(null);
 
@@ -73,22 +73,24 @@ describe('Blogpost List', function(){
 	});
 
 	it('Should update Blogposts on PUT', function(){
+	
 		const updateData = {
 			title: 'update title',
 			content: 'update content',
 			author: 'update author',
 			publishDate: Date.now()
 		};
-		return chai.request(app).get('/blog-posts').then(function(res){
-			return chai.request(app).put(`/blog-posts/${updateData}`).send(updateData)
-		}).then(function(res){
-			expect(res).to.have.status(200);
-			expect(res).to.be.json;
-			expect(res).to.be.a('object');
-			expect(res).to.deep.equal(updateData);
-		}).catch(function(err){
-			console.log(err);
-		});
+		const post = BlogPost.create(updateData).then(function(post) {
+			updateData['id'] = post.id;
+			return chai.request(app)
+				.put(`/blog-posts/${post.id}`)
+				.send(updateData)
+				.then(function(res) {
+					expect(res).to.have.status(204);
+					expect(res).to.be.a('object');
+					expect(res.body).to.deep.equal({});
+				})
+			});
 	});
 
 	it('Should delete Blogposts on DELETE', function(){
